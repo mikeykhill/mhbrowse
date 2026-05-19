@@ -316,3 +316,31 @@ tenantPicker.addEventListener('change', () => {
 sidebarToggle.addEventListener('click', () => {
   sidebar.classList.toggle('collapsed');
 });
+
+// --- AUTO-UPDATER UI LOGIC ---
+const updateText = document.getElementById('update-text');
+const statusDot = document.querySelector('.status-dot');
+const restartUpdateBtn = document.getElementById('restart-update-btn');
+
+if (window.api && window.api.onUpdateStatus) {
+  window.api.onUpdateStatus((data) => {
+    updateText.textContent = data.message;
+    statusDot.className = 'status-dot'; // Reset classes
+    
+    if (data.status === 'up-to-date') {
+      statusDot.classList.add('green');
+    } else if (data.status === 'checking' || data.status === 'available' || data.status === 'update-downloaded') {
+      statusDot.classList.add('yellow');
+      
+      if (data.status === 'update-downloaded') {
+        restartUpdateBtn.style.display = 'block';
+      }
+    } else if (data.status === 'error') {
+      statusDot.classList.add('red');
+    }
+  });
+
+  restartUpdateBtn.addEventListener('click', () => {
+    window.api.restartApp();
+  });
+}
