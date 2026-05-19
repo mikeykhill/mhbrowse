@@ -1,0 +1,508 @@
+:root {
+  --bg-color: #0f172a; /* Sleek dark blue-grey background */
+  --sidebar-bg: #1e293b; /* Slightly lighter sidebar */
+  --text-color: #e2e8f0;
+  --accent-color: #8b5cf6; /* Vibrant purple accent */
+  --accent-hover: #7c3aed;
+  --input-bg: #0f172a;
+  --input-border: #334155;
+  --btn-hover: #334155;
+  --pane-bg: #1e293b;
+  --pane-border: #334155;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow: hidden;
+}
+
+#app-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+#sidebar {
+  width: 260px;
+  background-color: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  transition: width 0.3s ease, padding 0.3s ease;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#sidebar.collapsed {
+  width: 65px;
+  padding: 24px 16px;
+}
+
+#sidebar.collapsed .brand-text,
+#sidebar.collapsed .address-container,
+#sidebar.collapsed .portals-section,
+#sidebar.collapsed .nav-group {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.brand-text, .address-container, .portals-section, .nav-group {
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.brand {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  padding: 0 8px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+}
+
+.brand-dot {
+  width: 12px;
+  height: 12px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent-color);
+}
+
+.nav-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  justify-content: center;
+  background: rgba(0,0,0,0.2);
+  padding: 6px;
+  border-radius: 12px;
+}
+
+.nav-group button {
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-color);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-group button:hover {
+  background-color: var(--btn-hover);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.nav-group button:active {
+  transform: translateY(1px);
+}
+
+.nav-group button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.address-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.address-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #94a3b8;
+  margin-left: 8px;
+  font-weight: 500;
+}
+
+#primary-address {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  font-size: 13px;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  color: white;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+  outline: none;
+  font-family: inherit;
+}
+
+#primary-address:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+  background-color: #0b1120;
+}
+
+#tenant-picker {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  font-size: 13px;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  color: white;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+  outline: none;
+  font-family: inherit;
+  appearance: none;
+  cursor: pointer;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e2e8f0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 14px top 50%;
+  background-size: 12px auto;
+}
+
+#tenant-picker:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+  background-color: #0b1120;
+}
+
+.portals-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.section-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #94a3b8;
+  margin-left: 8px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.portal-btn {
+  background-color: transparent;
+  color: var(--text-color);
+  border: 1px solid transparent;
+  padding: 12px 14px;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+}
+
+.portal-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.portal-btn:active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+#workspace {
+  flex-grow: 1;
+  background-color: var(--bg-color);
+  position: relative;
+  min-width: 0;
+  /* Allow golden layout to handle its own padding, usually we don't pad the container */
+}
+
+/* Golden Layout Overrides & Pane Styles */
+.lm_goldenlayout {
+  background: var(--bg-color);
+}
+.lm_content {
+  background: var(--pane-bg);
+  border: 1px solid var(--pane-border);
+}
+.lm_header {
+  background-color: var(--sidebar-bg) !important;
+}
+.lm_tab {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+.lm_tab.lm_active {
+  background-color: var(--pane-bg) !important;
+  border-bottom: none !important;
+}
+
+/* Custom Pane Content Styling */
+.m365-pane-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.pane-toolbar {
+  display: flex;
+  padding: 8px;
+  background: var(--sidebar-bg);
+  border-bottom: 1px solid var(--pane-border);
+  gap: 8px;
+  align-items: center;
+}
+
+.pane-nav-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.pane-nav-btn:hover {
+  background: var(--btn-hover);
+}
+
+.pane-nav-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.pane-address-bar {
+  flex-grow: 1;
+  box-sizing: border-box;
+  padding: 6px 10px;
+  font-size: 12px;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  background-color: var(--input-bg);
+  color: white;
+  outline: none;
+}
+
+.pane-address-bar:focus {
+  border-color: var(--accent-color);
+}
+
+.m365-pane-container webview {
+  flex-grow: 1;
+  border: none;
+  background: #ffffff;
+}
+
+/* Modal and Tenant Management Styles */
+.hidden {
+  display: none !important;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--sidebar-bg);
+  width: 450px;
+  border-radius: 12px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--pane-border);
+  padding: 24px;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+
+.tenant-list-container h3, .add-tenant-form h3 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #94a3b8;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#modal-tenant-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--pane-border);
+  border-radius: 8px;
+  background: var(--bg-color);
+}
+
+.tenant-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid var(--pane-border);
+}
+
+.tenant-list-item:last-child {
+  border-bottom: none;
+}
+
+.tenant-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tenant-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+.tenant-email {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.delete-btn {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.delete-btn:hover {
+  background: #ef4444;
+  color: white;
+}
+
+.add-tenant-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.add-tenant-form input {
+  box-sizing: border-box;
+  padding: 10px 12px;
+  font-size: 13px;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  color: white;
+  transition: all 0.2s;
+  outline: none;
+  font-family: inherit;
+}
+
+.add-tenant-form input:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
+}
+
+#add-tenant-btn {
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#add-tenant-btn:hover {
+  background: var(--accent-hover);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+#close-modal-btn {
+  background: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--input-border);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+#close-modal-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.tenant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.manage-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid transparent;
+  color: #e2e8f0;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.manage-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255,255,255,0.1);
+  color: white;
+}
