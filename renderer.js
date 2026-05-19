@@ -69,6 +69,9 @@ layout.registerComponent('m365Pane', function(container, state) {
   
   const webview = document.createElement('webview');
   webview.src = url;
+  webview.setAttribute('nodeintegration', 'false');
+  webview.setAttribute('contextisolation', 'true');
+  webview.setAttribute('allowpopups', 'true');
   if (partition) {
     webview.setAttribute('partition', partition);
   }
@@ -342,5 +345,19 @@ if (window.api && window.api.onUpdateStatus) {
 
   restartUpdateBtn.addEventListener('click', () => {
     window.api.restartApp();
+  });
+}
+
+// --- NEW TAB IPC LOGIC ---
+if (window.api && window.api.onOpenNewTab) {
+  window.api.onOpenNewTab((url) => {
+    // Determine a generic title or attempt to parse domain
+    let title = 'New Tab';
+    try {
+      const hostname = new URL(url).hostname;
+      if (hostname) title = hostname;
+    } catch(e) {}
+    
+    addWorkspacePane({ title: title, url: url });
   });
 }

@@ -2,53 +2,47 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
 
+let mainWindow; // Define this globally
+
 function createWindow() {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     title: 'MHBrowse',
     width: 1280,
     height: 800,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      webviewTag: true, 
+      webviewTag: true,
       nodeIntegration: false,
-      contextIsolation: true
+      contextIsolation: true,
+      nativeWindowOpen: true
     }
   });
 
   mainWindow.loadFile('index.html');
 
-  autoUpdater.on('checking-for-update', () => {
-    mainWindow.webContents.send('update-status', { status: 'checking', message: 'Checking for updates...' });
-  });
-
-  autoUpdater.on('update-available', () => {
-    mainWindow.webContents.send('update-status', { status: 'available', message: 'Update available. Downloading...' });
-  });
-
-  autoUpdater.on('update-not-available', () => {
-    mainWindow.webContents.send('update-status', { status: 'up-to-date', message: 'Up to date' });
-  });
-
-  autoUpdater.on('error', (err) => {
-    mainWindow.webContents.send('update-status', { status: 'error', message: 'Update error' });
-  });
-
-  autoUpdater.on('update-downloaded', () => {
-    mainWindow.webContents.send('update-status', { status: 'update-downloaded', message: 'Ready to Install' });
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    // Intercept pop-ups and open as new tabs
+    mainWindow.webContents.send('open-new-tab', url);
+    return { action: 'deny' };
   });
 }
+
+// Move these OUT of createWindow
+autoUpdater.on('checking-for-update', () => {
+  if (mainWindow) mainWindow.webContents.send('update-status', { status: 'checking', message: 'Checking...' });
+});
+
+autoUpdater.on('update-available', () => {
+  if (mainWindow) mainWindow.webContents.send('update-status', { status: 'available', message: 'Downloading...' });
+});
+
+autoUpdater.on('update-downloaded', () => {
+  if (mainWindow) mainWindow.webContents.send('update-status', { status: 'update-downloaded', message: 'Ready to Install' });
+});
+
+// ... add your error/not-available handlers here too ...
 
 app.whenReady().then(() => {
   createWindow();
   autoUpdater.checkForUpdatesAndNotify();
-});
-
-ipcMain.on('restart-app', () => {
-  autoUpdater.quitAndInstall();
-});
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
 });
